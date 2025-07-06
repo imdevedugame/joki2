@@ -50,21 +50,24 @@ class Checkout extends BaseController
 
         return redirect()->to('/member/pembayaran/' . $idPemesanan);
     }
+public function pembayaran($id)
+{
+    $pemesananModel = new \App\Models\PemesananModel();
 
-    public function pembayaran($id)
-    {
-        $pemesananModel = new \App\Models\PemesananModel();
-        $data['pemesanan'] = $pemesananModel
-            ->join('paket_wisata', 'paket_wisata.id_paket = pemesanan.id_paket')
-            ->where('id_pemesanan', $id)
-            ->first();
+    $data['pemesanan'] = $pemesananModel
+        ->select('pemesanan.*, paket_wisata.nama_paket, paket_wisata.harga')
+        ->join('paket_wisata', 'paket_wisata.id_paket = pemesanan.id_paket')
+        ->where('pemesanan.id_pemesanan', $id)
+        ->first();
 
-        if (!$data['pemesanan']) {
-            return redirect()->to('/')->with('error', 'Data tidak ditemukan.');
-        }
-
-        return view('wisata/pembayaran', $data);
+    if (!$data['pemesanan']) {
+        log_message('error', 'Gagal load pembayaran untuk ID pemesanan: ' . $id);
+        return redirect()->to('/')->with('error', 'Data tidak ditemukan.');
     }
+
+    return view('wisata/pembayaran', $data);
+}
+
 
     public function simpanPembayaran()
     {
@@ -176,27 +179,38 @@ class Checkout extends BaseController
     }
 
     // ---------------------------- RIWAYAT ----------------------------
-    public function riwayat()
-    {
-        $id_member = session()->get('member_id');
+   public function riwayat()
+{
+    $id_member = session()->get('member_id');
 
-        $wisata = $this->db->table('pemesanan')
-            ->select('pemesanan.*, paket_wisata.nama_paket, pembayaran.metode, pembayaran.bukti, pembayaran.status AS status_bayar')
-            ->join('paket_wisata', 'paket_wisata.id_paket = pemesanan.id_paket')
-            ->join('pembayaran', 'pembayaran.id_pemesanan = pemesanan.id_pemesanan', 'left')
-            ->where('pemesanan.id_member', $id_member)
-            ->get()->getResultArray();
+    // Ambil pembayaran wisata terakhir
+    $subQueryPembayaran = $this->db->table('pembayaran')
+        ->select('MAX(id_pembayaran) as id_pembayaran')
+        ->groupBy('id_pemesanan');
 
-        $homestay = $this->db->table('pemesanan_homestay')
-            ->select('pemesanan_homestay.*, homestay.nama_homestay, pembayaran_homestay.metode, pembayaran_homestay.bukti, pembayaran_homestay.status AS status_bayar')
-            ->join('homestay', 'homestay.id_homestay = pemesanan_homestay.id_homestay')
-            ->join('pembayaran_homestay', 'pembayaran_homestay.id_pemesanan = pemesanan_homestay.id_pemesanan_homestay', 'left')
-            ->where('pemesanan_homestay.id_member', $id_member)
-            ->get()->getResultArray();
+    $wisata = $this->db->table('pemesanan')
+        ->select('pemesanan.*, paket_wisata.nama_paket, pembayaran.metode, pembayaran.bukti, pembayaran.status AS status_bayar')
+        ->join('paket_wisata', 'paket_wisata.id_paket = pemesanan.id_paket')
+        ->join('pembayaran', 'pembayaran.id_pemesanan = pemesanan.id_pemesanan AND pembayaran.id_pembayaran IN (' . $subQueryPembayaran->getCompiledSelect() . ')', 'left', false)
+        ->where('pemesanan.id_member', $id_member)
+        ->get()->getResultArray();
 
-        return view('checkout/riwayat', [
-            'wisata' => $wisata,
-            'homestay' => $homestay
-        ]);
-    }
+    // Ambil pembayaran homestay terakhir
+    $subQueryPembayaranHomestay = $this->db->table('pembayaran_homestay')
+        ->select('MAX(id) as id')
+        ->groupBy('id_pemesanan');
+
+    $homestay = $this->db->table('pemesanan_homestay')
+        ->select('pemesanan_homestay.*, homestay.nama_homestay, pembayaran_homestay.metode, pembayaran_homestay.bukti, pembayaran_homestay.status AS status_bayar')
+        ->join('homestay', 'homestay.id_homestay = pemesanan_homestay.id_homestay')
+        ->join('pembayaran_homestay', 'pembayaran_homestay.id_pemesanan = pemesanan_homestay.id_pemesanan_homestay AND pembayaran_homestay.id IN (' . $subQueryPembayaranHomestay->getCompiledSelect() . ')', 'left', false)
+        ->where('pemesanan_homestay.id_member', $id_member)
+        ->get()->getResultArray();
+
+    return view('checkout/riwayat', [
+        'wisata' => $wisata,
+        'homestay' => $homestay
+    ]);
+}
+
 }

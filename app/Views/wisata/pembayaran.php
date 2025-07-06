@@ -1,5 +1,5 @@
 <?= $this->extend('layout/template') ?>
-<?= $this->section('content'); ?>
+<?= $this->section('content') ?>
 
 <style>
 :root {
@@ -68,7 +68,7 @@ body {
     padding: 0 20px;
 }
 
-.form-wrapper {
+.payment-wrapper {
     background: white;
     border-radius: 25px;
     overflow: hidden;
@@ -77,7 +77,7 @@ body {
     animation: slideInUp 0.8s ease-out;
 }
 
-.form-wrapper::before {
+.payment-wrapper::before {
     content: '';
     position: absolute;
     top: 0;
@@ -87,13 +87,33 @@ body {
     background: linear-gradient(90deg, var(--primary-green), var(--light-green));
 }
 
-.form-header {
+.alert-section {
+    padding: 20px 40px 0;
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #ffebee, #ffcdd2);
+    border: 2px solid #f44336;
+    border-radius: 12px;
+    color: #c62828;
+    padding: 15px 20px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+}
+
+.alert-danger i {
+    margin-right: 10px;
+    font-size: 1.1rem;
+}
+
+.payment-header {
     background: linear-gradient(135deg, #f8f9fa, #e9ecef);
     padding: 30px 40px;
     border-bottom: 1px solid #e9ecef;
 }
 
-.package-info {
+.booking-info {
     background: linear-gradient(135deg, var(--bg-light), #e8f5e8);
     border-radius: 15px;
     padding: 25px;
@@ -101,39 +121,98 @@ body {
     margin: 0;
 }
 
-.package-info h4 {
+.booking-info h4 {
     color: var(--primary-green);
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-size: 1.4rem;
 }
 
-.package-info h4 i {
+.booking-info h4 i {
     margin-right: 12px;
     font-size: 1.2rem;
 }
 
-.package-info .info-grid {
+.info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 15px;
-    margin-top: 15px;
 }
 
 .info-item {
     display: flex;
-    align-items: center;
-    padding: 10px 0;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(46, 125, 50, 0.1);
+}
+
+.info-item:last-child {
+    border-bottom: none;
 }
 
 .info-item i {
     color: var(--primary-green);
-    margin-right: 10px;
+    margin-right: 12px;
     width: 20px;
     text-align: center;
+    margin-top: 2px;
+    flex-shrink: 0;
 }
 
-.form-container {
+.info-content {
+    flex: 1;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 2px;
+}
+
+.info-value {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.total-highlight {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 15px;
+    border: 2px solid #ff9800;
+}
+
+.total-highlight .info-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-green);
+}
+
+.payment-instructions {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 15px;
+    border-left: 4px solid #2196f3;
+}
+
+.payment-instructions h5 {
+    color: #1976d2;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.payment-instructions ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.payment-instructions li {
+    margin-bottom: 5px;
+    color: #424242;
+}
+
+.payment-form {
     padding: 40px;
 }
 
@@ -158,16 +237,8 @@ body {
     font-size: 1.1rem;
 }
 
-.form-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
-    margin-bottom: 25px;
-}
-
 .form-group {
-    display: flex;
-    flex-direction: column;
+    margin-bottom: 25px;
 }
 
 .form-label {
@@ -190,40 +261,25 @@ body {
     margin-left: 4px;
 }
 
-.form-control {
+.form-control, .form-select {
     border: 2px solid #e0e0e0;
     border-radius: 12px;
     padding: 14px 18px;
     font-size: 1rem;
     transition: all 0.3s ease;
     background: #fafafa;
+    width: 100%;
 }
 
-.form-control:focus {
+.form-control:focus, .form-select:focus {
     border-color: var(--primary-green);
     box-shadow: 0 0 0 0.2rem rgba(46, 125, 50, 0.15);
     background: white;
     outline: none;
 }
 
-.form-control[readonly] {
-    background: linear-gradient(135deg, var(--bg-light), #e8f5e8);
-    color: var(--text-dark);
-    font-weight: 500;
-}
-
-.form-control::placeholder {
-    color: #999;
-    font-style: italic;
-}
-
-#total_bayar {
-    background: linear-gradient(135deg, var(--bg-light), #e8f5e8);
-    font-weight: bold;
-    color: var(--primary-green);
-    font-size: 1.2rem;
-    text-align: center;
-    border: 2px solid var(--accent-green);
+.form-select {
+    cursor: pointer;
 }
 
 .form-help {
@@ -240,41 +296,89 @@ body {
     font-size: 0.8rem;
 }
 
-.total-section {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-radius: 15px;
-    padding: 25px;
-    margin: 30px 0;
-    border: 2px solid var(--accent-green);
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 10px;
 }
 
-.total-section .section-title {
+.payment-method {
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 20px 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+}
+
+.payment-method:hover {
+    border-color: var(--primary-green);
+    background: var(--bg-light);
+    transform: translateY(-2px);
+}
+
+.payment-method.selected {
+    border-color: var(--primary-green);
+    background: var(--bg-light);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.2);
+}
+
+.payment-method i {
+    font-size: 2rem;
+    color: var(--primary-green);
+    margin-bottom: 10px;
+}
+
+.payment-method .method-name {
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 5px;
+}
+
+.payment-method .method-desc {
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.file-upload-area {
+    border: 2px dashed #e0e0e0;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    background: #fafafa;
+    transition: all 0.3s ease;
+    position: relative;
+    cursor: pointer;
+}
+
+.file-upload-area:hover {
+    border-color: var(--primary-green);
+    background: #f8f9fa;
+}
+
+.file-upload-area.dragover {
+    border-color: var(--primary-green);
+    background: var(--bg-light);
+}
+
+.file-upload-icon {
+    font-size: 3rem;
+    color: var(--primary-green);
     margin-bottom: 15px;
-    border-bottom: none;
-    color: var(--primary-green);
 }
 
-.calculation-breakdown {
-    background: white;
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 15px;
-    border: 1px solid #e9ecef;
-}
-
-.calc-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.calc-row:last-child {
-    border-bottom: 2px solid var(--primary-green);
-    font-weight: 700;
-    color: var(--primary-green);
+.file-upload-text {
+    color: var(--text-dark);
+    font-weight: 500;
+    margin-bottom: 8px;
     font-size: 1.1rem;
+}
+
+.file-upload-hint {
+    color: #6c757d;
+    font-size: 0.9rem;
 }
 
 .button-section {
@@ -311,12 +415,12 @@ body {
     font-size: 1rem;
 }
 
-.btn-primary {
+.btn-success {
     background: linear-gradient(135deg, var(--primary-green), var(--light-green));
     color: white;
 }
 
-.btn-primary::before {
+.btn-success::before {
     content: '';
     position: absolute;
     top: 0;
@@ -327,11 +431,11 @@ body {
     transition: left 0.5s;
 }
 
-.btn-primary:hover::before {
+.btn-success:hover::before {
     left: 100%;
 }
 
-.btn-primary:hover {
+.btn-success:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(46, 125, 50, 0.3);
     color: white;
@@ -367,13 +471,16 @@ body {
         font-size: 2.2rem;
     }
     
-    .form-container {
+    .payment-form {
         padding: 25px;
     }
     
-    .form-row {
+    .info-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
+    }
+    
+    .payment-methods {
+        grid-template-columns: 1fr;
     }
     
     .btn-group {
@@ -390,158 +497,157 @@ body {
 <div class="page-header">
     <div class="container">
         <h1 class="page-title">
-            <i class="fas fa-edit"></i>Form Pemesanan Paket Wisata
+            <i class="fas fa-money-bill-wave"></i>Konfirmasi Pembayaran
         </h1>
-        <p class="page-subtitle">Lengkapi formulir di bawah untuk melakukan pemesanan paket wisata</p>
+        <p class="page-subtitle">Konfirmasi pembayaran untuk menyelesaikan pemesanan paket wisata Anda</p>
     </div>
 </div>
 
-<div class="container my-5">
+<div class="container">
     <div class="main-container">
-        <div class="form-wrapper">
-            <!-- Form Header -->
-            <div class="form-header">
-                <div class="package-info">
-                    <h4><i class="fas fa-box"></i>Detail Paket Wisata</h4>
+        <div class="payment-wrapper">
+            <!-- Alert Section -->
+            <?php if (session()->getFlashdata('error')) : ?>
+            <div class="alert-section">
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <?= session()->getFlashdata('error') ?>
+                </div>
+            </div>
+            <?php endif ?>
+
+            <!-- Payment Header -->
+            <div class="payment-header">
+                <div class="booking-info">
+                    <h4><i class="fas fa-clipboard-list"></i>Detail Pemesanan Paket Wisata</h4>
                     <div class="info-grid">
                         <div class="info-item">
-                            <i class="fas fa-tag"></i>
-                            <span><strong>Nama Paket:</strong> <?= esc($paket['nama_paket']) ?></span>
+                            <i class="fas fa-box"></i>
+                            <div class="info-content">
+                                <div class="info-label">Nama Paket</div>
+                                <div class="info-value"><?= esc($pemesanan['nama_paket']) ?></div>
+                            </div>
                         </div>
                         <div class="info-item">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <span><strong>Harga per Orang:</strong> Rp <?= number_format($paket['harga'], 0, ',', '.') ?></span>
+                            <i class="fas fa-calendar-alt"></i>
+                            <div class="info-content">
+                                <div class="info-label">Tanggal Kunjungan</div>
+                                <div class="info-value">
+                                    <?php 
+                                    $date = new DateTime($pemesanan['tanggal']);
+                                    echo $date->format('l, d F Y');
+                                    ?>
+                                </div>
+                            </div>
                         </div>
                         <div class="info-item">
-                            <i class="fas fa-star"></i>
-                            <span><strong>Rating:</strong> 4.8/5 (Excellent)</span>
+                            <i class="fas fa-users"></i>
+                            <div class="info-content">
+                                <div class="info-label">Jumlah Peserta</div>
+                                <div class="info-value"><?= esc($pemesanan['jumlah_orang']) ?> Orang</div>
+                            </div>
                         </div>
                         <div class="info-item">
                             <i class="fas fa-clock"></i>
-                            <span><strong>Durasi:</strong> 1 Hari Full</span>
+                            <div class="info-content">
+                                <div class="info-label">Status Pemesanan</div>
+                                <div class="info-value">Menunggu Pembayaran</div>
+                            </div>
                         </div>
+                    </div>
+                    
+                    <div class="total-highlight">
+                        <div class="info-item">
+                            <i class="fas fa-dollar-sign"></i>
+                            <div class="info-content">
+                                <div class="info-label">Total Pembayaran</div>
+                                <div class="info-value">Rp <?= number_format($pemesanan['total_bayar'], 0, ',', '.') ?></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-instructions">
+                        <h5><i class="fas fa-info-circle"></i> Petunjuk Pembayaran</h5>
+                        <ul>
+                            <li>Lakukan pembayaran sesuai dengan total yang tertera</li>
+                            <li>Upload bukti pembayaran dalam format JPG, PNG, atau PDF</li>
+                            <li>Pembayaran akan diverifikasi dalam 1x24 jam</li>
+                            <li>Konfirmasi akan dikirim via WhatsApp setelah pembayaran terverifikasi</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <!-- Form Content -->
-            <div class="form-container">
-                <form action="<?= site_url('member/simpan-pesanan') ?>" method="post">
+            <!-- Payment Form -->
+            <div class="payment-form">
+                <form action="<?= base_url('member/simpan-pembayaran') ?>" method="post" enctype="multipart/form-data">
                     <?= csrf_field() ?>
-                    <input type="hidden" name="id_paket" value="<?= $paket['id_paket'] ?>">
+                    <input type="hidden" name="id_pemesanan" value="<?= $pemesanan['id_pemesanan'] ?>">
 
-                    <!-- Informasi Paket Section -->
+                    <!-- Metode Pembayaran Section -->
                     <div class="form-section">
                         <h3 class="section-title">
-                            <i class="fas fa-info-circle"></i>Informasi Paket Wisata
+                            <i class="fas fa-credit-card"></i>Pilih Metode Pembayaran
                         </h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-box"></i>Nama Paket
-                                </label>
-                                <input type="text" class="form-control" value="<?= esc($paket['nama_paket']) ?>" readonly>
+                        <div class="form-group">
+                            <label for="metode" class="form-label">
+                                <i class="fas fa-wallet"></i>Metode Pembayaran<span class="required">*</span>
+                            </label>
+                            <select name="metode" id="metode" class="form-select" required>
+                                <option value="">-- Pilih Metode Pembayaran --</option>
+                                <option value="Transfer Bank">Transfer Bank</option>
+                                <option value="QRIS">QRIS (Scan & Pay)</option>
+                            </select>
+                            <small class="form-help">
+                                <i class="fas fa-info-circle"></i>Pilih metode pembayaran yang Anda inginkan
+                            </small>
+                        </div>
+
+                        <div class="payment-methods">
+                            <div class="payment-method" onclick="selectPayment('Transfer Bank')">
+                                <i class="fas fa-university"></i>
+                                <div class="method-name">Transfer Bank</div>
+                                <div class="method-desc">BCA, Mandiri, BRI, BNI</div>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-money-bill-wave"></i>Harga per Orang
-                                </label>
-                                <input type="text" class="form-control" value="<?= 'Rp ' . number_format($paket['harga'], 0, ',', '.') ?>" readonly>
+                            <div class="payment-method" onclick="selectPayment('QRIS')">
+                                <i class="fas fa-qrcode"></i>
+                                <div class="method-name">QRIS</div>
+                                <div class="method-desc">Scan QR Code</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Detail Pemesanan Section -->
+                    <!-- Upload Bukti Section -->
                     <div class="form-section">
                         <h3 class="section-title">
-                            <i class="fas fa-calendar-check"></i>Detail Pemesanan
+                            <i class="fas fa-upload"></i>Upload Bukti Pembayaran
                         </h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="tanggal" class="form-label">
-                                    <i class="fas fa-calendar-alt"></i>Tanggal Kunjungan<span class="required">*</span>
-                                </label>
-                                <input type="date" class="form-control" name="tanggal" id="tanggal" min="<?= date('Y-m-d') ?>" required>
-                                <small class="form-help">
-                                    <i class="fas fa-info-circle"></i>Pilih tanggal kunjungan wisata Anda
-                                </small>
+                        <div class="form-group">
+                            <label for="bukti" class="form-label">
+                                <i class="fas fa-file-upload"></i>Bukti Pembayaran<span class="required">*</span>
+                            </label>
+                            <div class="file-upload-area" onclick="document.getElementById('bukti').click()">
+                                <div class="file-upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="file-upload-text">Klik untuk upload bukti pembayaran</div>
+                                <div class="file-upload-hint">atau drag & drop file di sini</div>
                             </div>
-                            <div class="form-group">
-                                <label for="jumlah_orang" class="form-label">
-                                    <i class="fas fa-users"></i>Jumlah Peserta<span class="required">*</span>
-                                </label>
-                                <input type="number" class="form-control" name="jumlah_orang" id="jumlah_orang" min="1" max="50" placeholder="Contoh: 4" required>
-                                <small class="form-help">
-                                    <i class="fas fa-info-circle"></i>Total peserta yang akan mengikuti wisata
-                                </small>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-map-marker-alt"></i>Titik Kumpul
-                                </label>
-                                <input type="text" class="form-control" value="Akan dikonfirmasi setelah pembayaran" readonly>
-                                <small class="form-help">
-                                    <i class="fas fa-info-circle"></i>Lokasi berkumpul akan diberitahu via WhatsApp
-                                </small>
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">
-                                    <i class="fas fa-clock"></i>Waktu Keberangkatan
-                                </label>
-                                <input type="text" class="form-control" value="06:00 WIB (Estimasi)" readonly>
-                                <small class="form-help">
-                                    <i class="fas fa-info-circle"></i>Waktu dapat berubah sesuai kondisi
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Total Pembayaran Section -->
-                    <div class="total-section">
-                        <h3 class="section-title">
-                            <i class="fas fa-calculator"></i>Ringkasan Pembayaran
-                        </h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="total_bayar" class="form-label">
-                                    <i class="fas fa-dollar-sign"></i>Total Bayar
-                                </label>
-                                <input type="text" class="form-control" id="total_bayar" name="total_bayar" readonly placeholder="Rp 0">
-                                <small class="form-help">
-                                    <i class="fas fa-lightbulb"></i>Total = Harga per Orang × Jumlah Peserta
-                                </small>
-                            </div>
-                        </div>
-                        
-                        <div class="calculation-breakdown" id="breakdown" style="display: none;">
-                            <h5 style="margin-bottom: 15px; color: var(--primary-green);">
-                                <i class="fas fa-receipt"></i> Rincian Biaya
-                            </h5>
-                            <div class="calc-row">
-                                <span>Harga per Orang</span>
-                                <span id="harga-per-orang">Rp <?= number_format($paket['harga'], 0, ',', '.') ?></span>
-                            </div>
-                            <div class="calc-row">
-                                <span>Jumlah Peserta</span>
-                                <span id="jumlah-peserta">0 orang</span>
-                            </div>
-                            <div class="calc-row">
-                                <span>Total Pembayaran</span>
-                                <span id="total-pembayaran">Rp 0</span>
-                            </div>
+                            <input type="file" name="bukti" id="bukti" class="form-control" accept=".jpg,.jpeg,.png,.pdf" required style="display: none;">
+                            <small class="form-help">
+                                <i class="fas fa-info-circle"></i>Format yang didukung: JPG, PNG, atau PDF (Maksimal 2MB)
+                            </small>
                         </div>
                     </div>
 
                     <!-- Button Section -->
                     <div class="button-section">
                         <div class="btn-group">
-                            <button type="submit" class="btn-custom btn-primary">
-                                <i class="fas fa-credit-card"></i>Pesan Sekarang
+                            <button type="submit" class="btn-custom btn-success">
+                                <i class="fas fa-paper-plane"></i>Kirim Bukti Pembayaran
                             </button>
                             <a href="<?= base_url('wisata') ?>" class="btn-custom btn-secondary">
-                                <i class="fas fa-arrow-left"></i>Kembali ke Daftar
+                                <i class="fas fa-arrow-left"></i>Kembali ke Paket Wisata
                             </a>
                         </div>
                     </div>
@@ -552,40 +658,80 @@ body {
 </div>
 
 <script>
-const hargaPerOrang = <?= $paket['harga'] ?>;
-const jumlahOrangInput = document.querySelector('#jumlah_orang');
-const totalBayarInput = document.querySelector('#total_bayar');
-const breakdownDiv = document.querySelector('#breakdown');
-
-function updateCalculation() {
-    const jumlah = parseInt(jumlahOrangInput.value) || 0;
-    const total = jumlah * hargaPerOrang;
+function selectPayment(method) {
+    document.getElementById('metode').value = method;
     
-    // Update total bayar
-    totalBayarInput.value = 'Rp ' + total.toLocaleString('id-ID');
+    // Remove selected class from all payment methods
+    document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('selected');
+    });
     
-    // Update breakdown
-    if (jumlah > 0) {
-        document.getElementById('jumlah-peserta').textContent = jumlah + ' orang';
-        document.getElementById('total-pembayaran').textContent = 'Rp ' + total.toLocaleString('id-ID');
-        breakdownDiv.style.display = 'block';
-    } else {
-        breakdownDiv.style.display = 'none';
-    }
+    // Add selected class to clicked method
+    event.currentTarget.classList.add('selected');
 }
 
-jumlahOrangInput.addEventListener('input', updateCalculation);
-
-// Validate date selection
-document.getElementById('tanggal').addEventListener('change', function() {
-    const selectedDate = new Date(this.value);
-    const today = new Date();
-    const daysDiff = Math.ceil((selectedDate - today) / (1000 * 60 * 60 * 24));
+// File upload handling
+document.getElementById('bukti').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const uploadArea = document.querySelector('.file-upload-area');
     
-    if (daysDiff < 3) {
-        alert('Mohon pilih tanggal minimal 3 hari dari sekarang untuk persiapan yang optimal.');
+    if (file) {
+        uploadArea.innerHTML = `
+            <div class="file-upload-icon">
+                <i class="fas fa-check-circle" style="color: var(--primary-green);"></i>
+            </div>
+            <div class="file-upload-text">File terpilih: ${file.name}</div>
+            <div class="file-upload-hint">Klik untuk mengganti file</div>
+        `;
     }
+});
+
+// Drag and drop functionality
+const uploadArea = document.querySelector('.file-upload-area');
+
+uploadArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    this.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    this.classList.remove('dragover');
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        document.getElementById('bukti').files = files;
+        document.getElementById('bukti').dispatchEvent(new Event('change'));
+    }
+});
+
+// Form validation before submit
+document.querySelector('form').addEventListener('submit', function(e) {
+    const metode = document.getElementById('metode').value;
+    const bukti = document.getElementById('bukti').files.length;
+    
+    if (!metode) {
+        e.preventDefault();
+        alert('Silakan pilih metode pembayaran terlebih dahulu.');
+        return;
+    }
+    
+    if (!bukti) {
+        e.preventDefault();
+        alert('Silakan upload bukti pembayaran terlebih dahulu.');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('.btn-success');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>Mengirim...';
+    submitBtn.disabled = true;
 });
 </script>
 
-<?= $this->endSection(); ?>
+<?= $this->endSection() ?>

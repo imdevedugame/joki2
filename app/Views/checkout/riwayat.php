@@ -271,7 +271,7 @@
                             <th><i class="fas fa-calendar me-2"></i>Tanggal</th>
                             <th><i class="fas fa-users me-2"></i>Jumlah Orang</th>
                             <th><i class="fas fa-money-bill me-2"></i>Total Bayar</th>
-                            <th><i class="fas fa-info-circle me-2"></i>Status</th>
+                        
                             <th><i class="fas fa-credit-card me-2"></i>Pembayaran</th>
                         </tr>
                     </thead>
@@ -282,13 +282,9 @@
                                 <td class="date-text"><?= date('d M Y', strtotime($w['tanggal'])) ?></td>
                                 <td><?= esc($w['jumlah_orang']) ?> orang</td>
                                 <td class="price-text">Rp <?= number_format($w['total_bayar'], 0, ',', '.') ?></td>
+                              
                                 <td>
-                                    <span class="status-badge <?= $w['status'] == 'Proses' ? 'status-proses' : ($w['status'] == 'Selesai' ? 'status-lunas' : 'status-belum') ?>">
-                                        <?= esc($w['status']) ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="status-badge <?= ($w['status_bayar'] ?? '') == 'Lunas' ? 'status-lunas' : 'status-belum' ?>">
+                                    <span class="status-badge <?= ($w['status_bayar'] ?? '') == 'Dikonfirmasi' ? 'status-lunas' : 'status-belum' ?>">
                                         <?= esc($w['status_bayar'] ?? 'Belum Bayar') ?>
                                     </span>
                                 </td>
@@ -322,7 +318,7 @@
                             <th><i class="fas fa-calendar-alt me-2"></i>Periode</th>
                             <th><i class="fas fa-users me-2"></i>Jumlah Orang</th>
                             <th><i class="fas fa-money-bill me-2"></i>Total Bayar</th>
-                            <th><i class="fas fa-info-circle me-2"></i>Status</th>
+                      
                             <th><i class="fas fa-credit-card me-2"></i>Pembayaran</th>
                         </tr>
                     </thead>
@@ -336,13 +332,9 @@
                                 </td>
                                 <td><?= esc($h['jumlah_orang']) ?> orang</td>
                                 <td class="price-text">Rp <?= number_format($h['total_bayar'], 0, ',', '.') ?></td>
+                               
                                 <td>
-                                    <span class="status-badge <?= $h['status'] == 'Proses' ? 'status-proses' : ($h['status'] == 'Selesai' ? 'status-lunas' : 'status-belum') ?>">
-                                        <?= esc($h['status']) ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="status-badge <?= ($h['status_bayar'] ?? '') == 'Lunas' ? 'status-lunas' : 'status-belum' ?>">
+                                    <span class="status-badge <?= ($h['status_bayar'] ?? '') == 'Diterima' ? 'status-lunas' : 'status-belum' ?>">
                                         <?= esc($h['status_bayar'] ?? 'Belum Bayar') ?>
                                     </span>
                                 </td>
